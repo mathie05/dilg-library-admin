@@ -3,6 +3,7 @@ import { RKPInfo, UploadData } from "../types/interfaces";
 import { db, storage } from "../firebase/config";
 import { addDoc, collection } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL, getMetadata } from "firebase/storage"
+import { format } from "date-fns";
 
 export const useUploadInfo = () => {
   const [kpProgress, setKPProgress] = useState<number>(0);
@@ -14,6 +15,9 @@ export const useUploadInfo = () => {
     if (!kp || !cover || !kpInfo) {
       return;
     }
+
+    const currentTime: Date = new Date();
+    const formattedTime: string = format(currentTime, "MM-dd-yy");
 
     const kpName = kp.name;
     const coverName = cover.name;
@@ -54,51 +58,13 @@ export const useUploadInfo = () => {
       title: kpInfo.title,
       description: kpInfo.description,
       kpURL: kpDownloadURL,
+      kpName: kpName,
       coverURL: coverDownloadURL,
-      fileType: kpMetadata.contentType
+      coverName: coverName,
+      fileType: kpMetadata.contentType,
+      timeUploaded: formattedTime
   });
-
-    // kpUploadTask.on(
-    //   "state_changed",
-    //   (snapshot) => {
-    //     const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-    //     setProgress(progress);
-    //   },
-    //   (error) => {
-    //     setError(error);
-    //   },
-    //   async () => {
-    //     try {
-    //       const downloadURL = await getDownloadURL(kpUploadTask.snapshot.ref);
-    //       console.log("Download URL:", downloadURL);
-    //       setProgress(100);
-    //     } catch (error) {
-    //       console.log(error)
-    //     }
-    //   }
-    // );
-
-    // coverUploadTask.on(
-    //   "state_changed",
-    //   (snapshot) => {
-    //     const cprogress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-    //     setCProgress(cprogress);
-    //   },
-    //   (error) => {
-    //     setError(error);
-    //   },
-    //   async () => {
-    //     try {
-    //       const cdownloadURL = await getDownloadURL(coverUploadTask.snapshot.ref);
-    //       console.log("Download URL:", cdownloadURL);
-    //       setProgress(100);
-    //     } catch (error) {
-    //       console.log(error)
-    //     }
-    //   }
-    // );
-
-  };
+};
 
   return {
     startUpload, kpProgress, coverProgress, kpError, coverError

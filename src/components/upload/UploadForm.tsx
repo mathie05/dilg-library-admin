@@ -16,13 +16,11 @@ function UploadForm() {
   const handleKPFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
     setKPFile(file || null);
-    // console.log("KP status: ", kpFile);
   };
 
   const handleCoverFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
     setCoverFile(file || null);
-    // console.log("Cover status: ", coverFile);
   };
 
   useEffect(() => {
@@ -42,12 +40,10 @@ function UploadForm() {
     setKPData({ ...kpData, [name]: value });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (kpFile && coverFile && kpData) {
-      // startUpload(kpFile, coverFile);
-      // console.log("Files uploaded:", kpFile, coverFile);
-      startUpload(
+      await startUpload(
         { kp: kpFile, cover: coverFile },
         {
           title: kpData.title,
@@ -59,11 +55,11 @@ function UploadForm() {
       );
       console.log(`KP upload progress: ${kpProgress}`);
       console.log(`Cover upload progress: ${coverProgress}`);
+
+      window.location.reload();
     } else {
       console.log("Please select both files and fill out the needed details.");
     }
-    setKPFile(null);
-    setCoverFile(null);
   };
 
   return (
@@ -219,70 +215,6 @@ function UploadForm() {
           </div>
         </section>
       </form>
-
-      {/* <section className="p-6 mx-auto bg-whiite rounded-md shadow-md dark:bg-gray-800 mt-10">
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
-            <div>
-              <label className="text-black dark:text-gray-200">KP Title</label>
-              <input
-                type="text"
-                name="title"
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
-              />
-            </div>
-            <div>
-              <label className="text-black dark:text-gray-200">KP Author</label>
-              <input
-                type="text"
-                name="author"
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
-              />
-            </div>
-            <div>
-              <label className="text-black dark:text-gray-200">
-                Publication Date
-              </label>
-              <input
-                type="date"
-                name="publicationDate"
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
-              />
-            </div>
-            <div>
-              <label className="text-black dark:text-gray-200">
-                Select KP Type
-              </label>
-              <select
-                name="kpType"
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
-              >
-                <option value="eBook">eBook</option>
-                <option value="Journal">Journal</option>
-                <option value="Report">Report</option>
-              </select>
-            </div>
-            <div>
-              <label className="text-black dark:text-gray-200">
-                KP Description
-              </label>
-              <textarea
-                id="description"
-                name="description"
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
-              ></textarea>
-            </div>
-          </div>
-          <div className="flex justify-end mt-6">
-            <button
-              type="submit"
-              className="px-6 py-2 leading-5 text-white transition-colors duration-200 transform bg-blue-700 rounded-md hover:bg-pink-700 focus:outline-none focus:bg-gray-600"
-            >
-              Upload
-            </button>
-          </div>
-        </form>
-      </section> */}
     </>
   );
 }

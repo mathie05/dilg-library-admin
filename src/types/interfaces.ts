@@ -7,6 +7,10 @@ export interface KPInfo {
   fileType: string;
   kpType: string;
   timeUploaded: string;
+  coverURL: string;
+  kpURL: string;
+  coverName: string;
+  kpName: string;
 }
 
 export interface KPTableProps {
@@ -45,3 +49,9 @@ export interface UploadData {
   kp: File; 
   cover: File;
 }
+
+export interface DeleteProps {
+  kpType: string
+  kpName: string
+  coverName: string
+} 

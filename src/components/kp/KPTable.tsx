@@ -1,19 +1,18 @@
 import { useState } from "react";
-import { KPInfo, KPTableProps } from "../../types/interfaces";
+import { DeleteProps, KPInfo, KPTableProps } from "../../types/interfaces";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase/config";
-import { format } from "date-fns";
+import { useDelete } from "../../hooks/useDelete";
 
 const KPTable: React.FC<KPTableProps> = ({ info }) => {
+  const { deleteFilesByDownloadURLs } = useDelete();
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [documentIdToDelete, setDocumentIdToDelete] = useState<string>("");
   const [documentRefToDelete, setdocumentRefToDelete] = useState<string>("");
-
-  const currentTime: Date = new Date();
-  const formattedTime: string = format(currentTime, "MM-dd-yy");
-
-  console.log(typeof formattedTime);
+  const [documentRefName, setDocumentRefName] = useState<string>("");
+  const [documentCoverName, setDocumentCoverName] = useState<string>("");
+  // const [deleteProps, setDeleteProps] = useState<DeleteProps[]>([]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
@@ -29,11 +28,24 @@ const KPTable: React.FC<KPTableProps> = ({ info }) => {
   });
 
   const deleteDocument = async () => {
+    // const deletePropsItem: DeleteProps = {
+    //   kpType: documentRefToDelete,
+    //   kpName: documentRefName,
+    //   coverName: documentCoverName,
+    // };
+
+    // console.log(documentRefToDelete, documentRefName, documentCoverName);
+
     try {
       if (documentIdToDelete) {
         await deleteDoc(doc(db, documentRefToDelete, documentIdToDelete));
-        window.location.reload();
+        await deleteFilesByDownloadURLs({
+          kpType: documentRefToDelete,
+          kpName: documentRefName,
+          coverName: documentCoverName,
+        });
         console.log("Document successfully deleted!");
+        window.location.reload();
       }
     } catch (error) {
       console.error("Error deleting document: ", error);
@@ -145,6 +157,8 @@ const KPTable: React.FC<KPTableProps> = ({ info }) => {
                       event.preventDefault();
                       setDocumentIdToDelete(item.id);
                       setdocumentRefToDelete(item.kpType);
+                      setDocumentRefName(item.kpName);
+                      setDocumentCoverName(item.coverName);
                       setModalVisible(true);
                     }}
                   >
