@@ -2,11 +2,11 @@ export interface KPInfo {
   id: string;
   title: string;
   description: string;
-  datePublished: Date;
+  datePublished: string;
   author: string;
   fileType: string;
   kpType: string;
-  downloadURl: string;
+  timeUploaded: string;
 }
 
 export interface KPTableProps {
@@ -23,12 +23,25 @@ export interface UserInfo {
   address: string;
   occupation: string;
   institution: string;
-  kpId: string;
+  kpID: string;
   kpTitle: string;
-  dateDownloaded: Date;
+  timeDownloaded: Date;
   reason: string;
 }
 
 export interface UserTableProps {
   info: UserInfo[];
+}
+
+export interface RKPInfo {
+  author: string;
+  datePublished: string;
+  kpType: string;
+  title: string;
+  description: string;
+}
+
+export interface UploadData {
+  kp: File; 
+  cover: File;
 }
